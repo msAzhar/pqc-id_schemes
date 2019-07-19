@@ -26,7 +26,7 @@ Amaç: Kimlik Doğrulama şemaları için bir framework oluşturmak. Bir ID sche
 - `knuth_shuffle`
 
 ### Kullanım
-Öncellikle, bir IDscheme için gerekli olan fonksiyonların bulunduğu `idscheme.js` dosyası dahil edilmelidir:
+Öncellikle, bir IDscheme için gerekli olan fonksiyonların bulunduğu `idscheme.js` modülü dahil edilmelidir:
 
 ```javascript
 var IDscheme = require('./idscheme.js');
@@ -57,5 +57,21 @@ function v2(){
 	...
 }
 
-... 
+...
+``` 
 
+### Test amaçlı implement edilen IDscheme'ler
+1. [Kawachi, Tanaka and Xagawa's Identification Scheme]
+2. [CLRS Identification Scheme (Cayrel et al.)]
+3. [Xagawa and Tanaka's Identification Scheme (based on NTRU and Stern's scheme)]
+4. [LWE-based Identification Scheme]
+
+[Kawachi, Tanaka and Xagawa's Identification Scheme]: ./test/xagawa-test.js
+[CLRS Identification Scheme (Cayrel et al.)]: ./test/clrs-test.js
+[Xagawa and Tanaka's Identification Scheme (based on NTRU and Stern's scheme)]: ./test/xagawa-ntru-test.js
+[LWE-based Identification Scheme]: ./test/lwe-based-idscheme.js
+
+
+
+
+**Not:** Bu çalışma geliştirilmektedir. odlarda hata ve eksiklikler bulunabilir.  
