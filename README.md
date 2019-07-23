@@ -1,4 +1,4 @@
-Framework for ID schemes (javascript)
+Framework for Lattice-based ID schemes (javascript)
 =====================================
 
 Amaç: Kimlik Doğrulama şemaları için bir framework oluşturmak. Bir ID scheme'i, Prover ve Verifier için gerekli olan fonksiyonları çağırarak uygulayabilmeliyiz. 
@@ -60,7 +60,7 @@ function v2(){
 ...
 ``` 
 
-### Post-Quantum Cryptography: Lattice Identification Schemes
+### Post-Quantum Cryptography: Lattice-based Identification Schemes
 Bu çalışmada referans olarak kullanılan survey'de verilen identification scheme'ler, aşağıdaki tabloda dayalı olduğu problemlerle özetlenmiştir.
 
 | ID scheme                                          | Problems 						|
