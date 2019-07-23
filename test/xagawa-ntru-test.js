@@ -22,14 +22,8 @@ var c1,
 //commitment function
 function com(){
 	var param;
-	//TODO: duzenle
-	if(arguments.length != 1){
-		param = IDscheme.knuth_shuffle(arguments[1]);
-		return IDscheme.sha256(param);
-	}else{
-		param = arguments[0];
- 		return IDscheme.sha256(param);
-	}
+	param = (arguments[0]+arguments[1]);
+	return IDscheme.sha256(param);
 }
 
 function keyGeneration(n, q) {
@@ -68,7 +62,10 @@ function keyGeneration(n, q) {
 
 	sk_xh = xh;
 	sk_xt = xt;
-
+	/*print("Key Generation:");
+	print("Private Key: x_h: "+xh+" and x_t: "+xt);
+	print("Public Key: a_h: "+ah+", a_t: "+at+" and y: "+y);
+	*/
 }
 
 // Prover: p1()
@@ -100,10 +97,10 @@ function p1(){ //
 	c1 = com("pih","pit",y);
 	c2 = com(part1,part2); // com(pi(r_h),pi(r_t))
 	c3 = com(prt1,prt2); // com(pi(x+r)_h,pi(x+r)_t)
-	print("C1,2,3:");
-	print(c1);
-	print(c2);
-	print(c3);
+	
+	print("c1:" + c1);
+	print("c2:" + c2);
+	print("c3:" + c3);
 
 }
 
@@ -118,8 +115,8 @@ function p2(c){
 	var ch = c;
 	var resp = [];
 
-	print("CHallenge is:");
-	print(ch);
+	//print("Challenge is:");
+	//print(ch);
 	if(ch == 1){
 		resp[0] = IDscheme.knuth_shuffle(sk_xh, glob_sigma);
 		resp[1] = IDscheme.knuth_shuffle(sk_xt, glob_sigma);
@@ -213,11 +210,19 @@ var n = 677,
 
 
 function testidscheme() {
-	print("Test ID Scheme:");
+	print("Test Xagawa and Tanaka's ID Scheme (NTRU-based):");
+	print("Parameters Set:");
+	print("n = " + n);
+	print("q = " + q);
 	keyGeneration(n, q);
+
+	print("Prover: compute commitments c1, c2 and c3:");
 	p1();
 	var ch;
 	ch = v1();
+	print("Verifier: sends a challenge: " + ch);
+	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + ch + ")");
+	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
 	var response = p2(ch);
 	v2(ch,response);
 

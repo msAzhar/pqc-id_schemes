@@ -79,6 +79,10 @@ function p1(){ // A,y,x
 	c2 = com(pr); // com(pi(r))
 	c3 = com(IDscheme.knuth_shuffle(z)); // com(pi(x+r))
 
+	print("c1:" + c1);
+	print("c2:" + c2);
+	print("c3:" + c3);
+
 }
 
 // Verifier: v1()
@@ -97,8 +101,8 @@ function p2(c){
 	var u = new Array();
 	var resp = [];
 
-	print("CHallenge is:");
-	print(ch);
+	//print("CHallenge is:");
+	//print(ch);
 	if(ch == 1){
 		r = r_vector;
 		s = IDscheme.knuth_shuffle(x_vector);
@@ -167,9 +171,8 @@ function v2(c, params){
 		comp2 = com(resp[3]); // com(t); t = pi(r)
 	
 		//print(resp[0]); //c2
-		print("com(t)");
-		print(comp2);
-
+		/*print("com(t)");
+		print(comp2);*/
 		if( resp[0] == comp2 && resp[1]==comp1){//comp(resp[1], comp1)){ // c2==com(t) && c3==(s+t)
 			print("Success!");
 		}else{
@@ -207,11 +210,11 @@ function v2(c, params){
 		
 		comp1 = com(resp[2],av); //com(psi,Av)
 		comp2 = com(IDscheme.knuth_shuffle(resp[3])); // com(psi(v))
-		print("Com1:");
+		/*print("Com1:");
 		print(comp1);
 		print("C1:");
 		print(resp[0]);
-
+		*/
 		if( resp[0]==comp1 && resp[1]== comp2){ // c1==com(psi, Av) && c2==com(psi(v) 
 					print("Success!");
 		}else{
@@ -231,11 +234,20 @@ var n = 512,
 
 
 function testidscheme() {
-	print("Test ID Scheme:");
+	print("Kawachi, Xagawa and Tanaka's ID Scheme:");
+	print("Parameters Set:");
+	print("n = " + n);
+	print("m = " + m);
+	print("q = " + q);
 	keyGeneration(n, m, q);
+
+	print("Prover: compute commitments c1, c2 and c3:");
 	p1();
 	var ch;
 	ch = v1();
+	print("Verifier: sends a challenge: " + ch);
+	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + ch + ")");
+	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
 	var response = p2(ch);
 	v2(ch,response);
 

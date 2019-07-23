@@ -129,6 +129,9 @@ function p1(){ // A,s,b
 	c2 = com(perm2, r2); // com(Pi_gamma,_sigma(A(u+s));r2)
 	c3 = com(perm3, r3); // com(Pi_gamma,_sigma(Au+b);r3)
 
+	print("c1:" + c1);
+	print("c2:" + c2);
+	print("c3:" + c3);
 }
 
 // Verifier: v1()
@@ -141,8 +144,8 @@ function v1(){
 function p2(ch){
 	var resp = [];
 
-	print("CHallenge is:");
-	print(ch);
+	//print("CHallenge is:");
+	//print(ch);
 	if(ch == 1){
 		resp[0] = glob_r1;
 		resp[1] = glob_r2;
@@ -286,11 +289,22 @@ var n = 608,
 
 
 function testidscheme() {
-	print("Test ID Scheme:");
+	print("LWE-based ID Scheme:");
+	print("Parameters Set:");
+	print("n = " + n);
+	print("m = " + m);
+	print("q = " + q);
 	keyGeneration(n, m, q);
+
+	print("Prover: compute commitments c1, c2 and c3:");
 	p1();
 	var ch;
 	ch = v1();
+
+	print("Verifier: sends a challenge: " + ch);
+	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + ch + ")");
+	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
+	
 	var response = p2(ch);
 	v2(ch,response);
 

@@ -233,7 +233,7 @@ function v3(c, params, betha_){
 
 		comp2 = isinX(sigma, sM);
 
-		 if( c1 == comp1 && comp2){ // TODO: ikinci sharti ekle
+		 if( c1 == comp1 && comp2){ 
 			print("Success!");
 		}else{
 			print("Failed!");
@@ -275,18 +275,30 @@ var n = 512,
 	m = 2048;
 
 function testidscheme() {
-	print("Test ID Scheme:");
-	var t0 = new Date().getTime();
+	print("CLRS (Cayrel et al.) ID Scheme:");
+	print("Parameters Set:");
+	print("n = " + n);
+	print("m = " + m);
+	print("q = " + q);
 	keyGeneration(n, m, q);
+
+	print("Prover: compute commitments c1, c2:");
 	p1();
 	var alfa;
 	alfa = v1();
+
+	print("Verifier: computes and sends alpha : " + alfa);
+	
 	var resp_p2 = p2(alfa);
+
+	print("Prover: computes and sends betha.(betha = P_sigma(u+alpha.x))");
+	
 	var b;
 	b = v2(); // 0 veya 1 
-	print("B's value:");
-	print(b)
+	print("Verifier: sends a challenge: " + b);
 	var resp_p3 = p3(b);
+	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + b + ")");
+	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
 	var resp = v3(b,resp_p3, resp_p2); // ch, resp_p3, betha
 }
 //***********************************************************
