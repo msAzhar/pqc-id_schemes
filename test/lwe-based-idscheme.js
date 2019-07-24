@@ -44,7 +44,7 @@ function keyGeneration(n, m, q) {
 	}
 	
 	// b = As + e
-	var y = IDscheme.encVectorMultiplyMatrix(s, amatrix);
+	var y = IDscheme.vectorMultiplyMatrix(s, amatrix);
 	//print(y);
 	var b = IDscheme.addVectors(y,e); //pk
 	var p = IDscheme.hw(e); //pk
@@ -98,11 +98,11 @@ function p1(){ // A,s,b
 
 	var us = IDscheme.addVectors(u,s);
 
-	var part1 = IDscheme.encVectorMultiplyMatrix(us, amatrix); // A(u+s)
+	var part1 = IDscheme.vectorMultiplyMatrix(us, amatrix); // A(u+s)
 	glob_Aus = part1; //A(u+s)
 	var perm2 = IDscheme.knuth_shuffle(part1,sigma);
 
-	var au = IDscheme.encVectorMultiplyMatrix(u, amatrix); // Au
+	var au = IDscheme.vectorMultiplyMatrix(u, amatrix); // Au
 	var au_b = []; // Au+b
 	for (var i = 0; i < glob_n; i++){
 		au_b[i] = au[i] + b_vector[i];
@@ -255,7 +255,7 @@ function v2(c, params){
 		comp1 = com(resp[2],resp[0]); 
 
 		//var u_transpose = IDscheme.transpose(u);
-		var au = IDscheme.encVectorMultiplyMatrix(resp[3], A_matrix); // Au
+		var au = IDscheme.vectorMultiplyMatrix(resp[3], A_matrix); // Au
 		var au_b = []; // Au+b not: A,b pk
 		for (var i = 0; i < glob_n; i++){
 			au_b[i] = au[i] + b_vector[i];

@@ -44,7 +44,7 @@ function keyGeneration(n, m, q) {
 	//print(x);
 	
 	var x_transpose = x;
-	var y = IDscheme.encVectorMultiplyMatrix(x_transpose, amatrix);
+	var y = IDscheme.vectorMultiplyMatrix(x_transpose, amatrix);
 	
 	
 	A_matrix = amatrix;
@@ -66,13 +66,13 @@ function p1(){ // A,y,x
 	}
 
 	r_vector = r;
-	
+
 	for (var i = 0; i < glob_m; i++){
 		z[i] = x[i] + r[i];
 	}
 
 	var rr = IDscheme.transpose(r);
-	var ar = IDscheme.encVectorMultiplyMatrix(r, amatrix);
+	var ar = IDscheme.vectorMultiplyMatrix(r, amatrix);
 	var pr;
 
 	pr = IDscheme.knuth_shuffle(r); // c2
@@ -191,7 +191,7 @@ function v2(c, params){
 		temp = resp[3]; // u=x+r (c3)
 		y = y_Ax;
 		var tt = IDscheme.transpose(temp);
-		var d = IDscheme.decVectorMultiplyMatrix(temp, amatrix);
+		var d = IDscheme.vectorMultiplyMatrix(temp, amatrix);
 		var t = cikar(d,y);
 		
 		comp1 = com(resp[2],t);// com(fi,Au-y)
@@ -209,7 +209,7 @@ function v2(c, params){
 		amatrix = A_matrix;
 		var temp = resp[3]; // v= r
 		var tt = IDscheme.transpose(temp);
-		var av = IDscheme.encVectorMultiplyMatrix(temp, amatrix); // Av
+		var av = IDscheme.vectorMultiplyMatrix(temp, amatrix); // Av
 		
 		comp1 = com(resp[2],av); //com(psi,Av)
 		comp2 = com(IDscheme.knuth_shuffle(resp[3])); // com(psi(v))

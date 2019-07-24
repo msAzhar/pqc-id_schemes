@@ -54,7 +54,7 @@ function keyGeneration(n, m, q) {
 
 	var a_transpose = IDscheme.transpose(amatrix);
 	
-	var y = IDscheme.encVectorMultiplyMatrix(x, a_transpose);
+	var y = IDscheme.vectorMultiplyMatrix(x, a_transpose);
 	//print(y);
 
 	A_matrix = amatrix;
@@ -99,15 +99,15 @@ function p1(){ // A,y,x
 	//print(psigma_matrix);
 	p_sigma_matrix = psigma_matrix; // global P matrix
 
-	var z = IDscheme.encVectorMultiplyMatrix(x, psigma_matrix); 
+	var z = IDscheme.vectorMultiplyMatrix(x, psigma_matrix); 
 	//print(z);
 
 	glob_z = z;
 
 	var a_transpose = IDscheme.transpose(amatrix);
-	var au = IDscheme.encVectorMultiplyMatrix(u, a_transpose); //Au
+	var au = IDscheme.vectorMultiplyMatrix(u, a_transpose); //Au
 	//print(au); 
-	var pu = IDscheme.encVectorMultiplyMatrix(u, psigma_matrix); //P_sigma.u
+	var pu = IDscheme.vectorMultiplyMatrix(u, psigma_matrix); //P_sigma.u
 	//print(pu);
 
 	
@@ -134,8 +134,8 @@ function p2(alpha){
 	var alphax_vector = IDscheme.scalarMultiplyVector(alpha,x_vector);
 	u_alphax = IDscheme.addVectors(u_vector,alphax_vector); // u + alpha.x
 	//print(u_alphax);
-	betha = IDscheme.encVectorMultiplyMatrix(u_alphax, p_sigma_matrix);
-	print("Betha:");
+	betha = IDscheme.vectorMultiplyMatrix(u_alphax, p_sigma_matrix);
+	//print("Betha:");
 	//print(betha);
 	return betha;
 }
@@ -152,8 +152,8 @@ function p3(c){
 	var ch = c;
 	var resp = [];
 
-	print("CHallenge is:");
-	print(ch);
+	//print("CHallenge is:");
+	//print(ch);
 	if(ch == 1){
 		resp[0] = glob_sigma;
 		resp[1] = glob_r0;
@@ -218,13 +218,13 @@ function v3(c, params, betha_){
 		*/
 		var ap_sigma = IDscheme.multiply(amatrix,p_matrix); //A.P_sigma
 		var ap_transpose = IDscheme.transpose(ap_sigma);
-		var op1 = IDscheme.encVectorMultiplyMatrix(betha, ap_transpose);
+		var op1 = IDscheme.vectorMultiplyMatrix(betha, ap_transpose);
 		var op2 = IDscheme.scalarMultiplyVector(alpha,y);
 		var op3 = IDscheme.vectorSubstract(op1,op2);
 		comp1 = com(glob_sigma+op3,r0)
 
-		print("computation 1:");
-		print(comp1);
+		//print("computation 1:");
+		//print(comp1);
 
 		var sM = [];
 		for (var i = 0; i < glob_q; i++) { // r0 = {0,1}^n, r1 = {0,1}^n
@@ -252,8 +252,8 @@ function v3(c, params, betha_){
 		//print(check1_z); // 0 ve 1 lerden mi?
 		//print(check2_z);
 		comp1 = com(z+op2,r1);
-		print("computation 1:");
-		print(comp1);
+		//print("computation 1:");
+		//print(comp1);
 
 		if( c2 == comp1 && check2_z){ // TODO: ikinci sharti ekle
 			print("Success!");

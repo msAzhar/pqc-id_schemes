@@ -187,7 +187,7 @@ function multiplyMod(A, B, q) {
 
 //For Encrypt
 //Multiplies a matrix B by a vector a, c = a * B
-function encVectorMultiplyMatrix(a, B) {
+function vectorMultiplyMatrix(a, B) {
 	//var A_x = 1;
 	var A_y = a.length;
 	var B_x = B.length;
@@ -215,44 +215,6 @@ function encVectorMultiplyMatrix(a, B) {
 			} else {
 				v[j] += a[i] * Browi[j];
 			}
-		}
-	}
-	return v;
-}
-
-
-//For Decrypt
-//Multiplies a matrix B by a vector a, c = a * B
-function decVectorMultiplyMatrix(a, B) {
-	//var A_x = 1;
-	var A_y = a.length;
-	var B_x = B.length;
-	var B_y = B[0].length;
-	
-	if (B_x != A_y) {
-		alert("Matrix inner dimensions must agree");
-		return;
-	}
-		
-	var v = new Array(B_y);
-	for (var j = 0; j < B_y; j++) {
-		v[j] = 0;
-	}
-		
-	for (var i = 0; i < A_y; i++) {
-		var Browi = B[i];
-		for (var j = 0; j < B_y; j++) {
-			/*
-			if (Browi[j] == 0) {
-				//v[j] += 0;
-			} else if (Browi[j] == 1) {
-				v[j] += a[i];
-			} else if (Browi[j] == -1) {
-				v[j] -= a[i];
-			} else {
-			*/
-				v[j] += a[i] * Browi[j];	// it will be a little bit faster for decrypt on Firefox
-			//}
 		}
 	}
 	return v;
@@ -574,8 +536,7 @@ module.exports = {
 	transpose,
 	addMod,
 	hw,
-	encVectorMultiplyMatrix,
-	decVectorMultiplyMatrix,
+	vectorMultiplyMatrix,
 	mod,
 	sha256,
 	shuffle,
