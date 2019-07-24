@@ -53,7 +53,7 @@ function addMod(A, B, q) {
 }
 	
 //Vector subtraction, c = a - b
-function vectorSubstract(a, b) {
+function vectorSubtract(a, b) {
 	if (b.length != a.length) {
 		alert("Vector length must agree");
 		return;
@@ -530,7 +530,7 @@ module.exports = {
 	scalarMultiplyMod,
 	multiply,
 	multiplyMod,
-	vectorSubstract,
+	vectorSubtract,
 	vectorMultiply,
 	initMatrixRandom,
 	transpose,

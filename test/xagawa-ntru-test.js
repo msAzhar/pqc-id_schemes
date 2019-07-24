@@ -169,7 +169,7 @@ function v2(c, params){
 		var part1 = IDscheme.vectorMultiply(resp[2],a_h);
 		var part2 = IDscheme.vectorMultiply(resp[3],a_t);
 		var part3 = IDscheme.addVectors(part1,part2);
-		var part4 = IDscheme.vectorSubstract(part3,y);
+		var part4 = IDscheme.vectorSubtract(part3,y);
 
 		//c1hesabi
 		comp1 = com(resp[0],resp[1],part4);

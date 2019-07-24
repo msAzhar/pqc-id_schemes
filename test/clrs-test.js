@@ -220,7 +220,7 @@ function v3(c, params, betha_){
 		var ap_transpose = IDscheme.transpose(ap_sigma);
 		var op1 = IDscheme.vectorMultiplyMatrix(betha, ap_transpose);
 		var op2 = IDscheme.scalarMultiplyVector(alpha,y);
-		var op3 = IDscheme.vectorSubstract(op1,op2);
+		var op3 = IDscheme.vectorSubtract(op1,op2);
 		comp1 = com(glob_sigma+op3,r0)
 
 		//print("computation 1:");
@@ -246,7 +246,7 @@ function v3(c, params, betha_){
 		var r1 = resp[1];
 		var alpha = glob_alpha;
 		var op1 = IDscheme.scalarMultiplyVector(alpha,z);
-		var op2 = IDscheme.vectorSubstract(betha,op1);
+		var op2 = IDscheme.vectorSubtract(betha,op1);
 		var check1_z = check_z(z);// ?z\in[0,1]
 		var check2_z = check_z2(z); 
 		//print(check1_z); // 0 ve 1 lerden mi?

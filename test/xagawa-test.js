@@ -90,7 +90,7 @@ function p1(){ // A,y,x
 
 // Verifier: v1()
 function v1(){
-	var random =Math.floor(Math.random() * (+4 - +1)) + +1; 
+	var random = Math.floor(Math.random() * (+4 - +1)) + +1; 
 	return random;
 }
 
