@@ -6,6 +6,7 @@ var A_matrix;
 var r_vector;
 var x_vector;
 var y_Ax;
+var glob_m, glob_q;
 var c1,
 	c2,
 	c3;
@@ -26,10 +27,10 @@ function com(){
 
 function keyGeneration(n, m, q) {
 	var amatrix = IDscheme.initMatrixRandom(m, n, q); // A, n*m
-	var x;
-	var r = new Array(m);	
+	var x;	
 	var ss = new Array(m);
 	glob_m = m;
+	glob_q = q;
 
 	for (var i = 0; i < (m/2); i++) {
 		ss[i] = 1;
@@ -45,12 +46,8 @@ function keyGeneration(n, m, q) {
 	var x_transpose = x;
 	var y = IDscheme.encVectorMultiplyMatrix(x_transpose, amatrix);
 	
-	for (var i = 0; i < m; i++) {
-		r[i] = IDscheme.nextInt(q);
-	}
 	
 	A_matrix = amatrix;
-	r_vector = r;
 	x_vector = x; // sk
 	y_Ax = y; // pk
 
@@ -59,15 +56,21 @@ function keyGeneration(n, m, q) {
 // Prover: p1()
 function p1(){ // A,y,x
 	var amatrix = A_matrix;
-	var r,
-		x;
+	var x;
+	var r = new Array(glob_m);
 	var z = new Array(glob_m);
-	r = r_vector;
 	x = x_vector;
 
+	for (var i = 0; i < glob_m; i++) {
+		r[i] = IDscheme.nextInt(glob_q);
+	}
+
+	r_vector = r;
+	
 	for (var i = 0; i < glob_m; i++){
 		z[i] = x[i] + r[i];
 	}
+
 	var rr = IDscheme.transpose(r);
 	var ar = IDscheme.encVectorMultiplyMatrix(r, amatrix);
 	var pr;
