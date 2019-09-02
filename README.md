@@ -86,4 +86,4 @@ Bu çalışmada referans olarak kullanılan survey'de verilen identification sch
 
 
 
-**Not:** Bu çalışma geliştirilmektedir. odlarda hata ve eksiklikler bulunabilir.  
+**Not:** Bu çalışma geliştirilmektedir. kodlarda hata ve eksiklikler bulunabilir.  
