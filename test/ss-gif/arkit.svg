@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" contentScriptType="application/ecmascript" contentStyleType="text/css" height="110px" preserveAspectRatio="none" style="width:303px;height:110px;" version="1.1" viewBox="0 0 303 110" width="303px" zoomAndPan="magnify"><defs/><g><ellipse cx="75.8051" cy="26.742" fill="#F8F8F8" rx="43.3051" ry="13.242" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="57" x="47.3051" y="30.4842">clrs-test</text><ellipse cx="211.9245" cy="26.5849" fill="#F8F8F8" rx="80.9245" ry="18.5849" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="138" x="142.9245" y="30.3271">lwe-based-idscheme</text><ellipse cx="76.108" cy="83.4216" fill="#F8F8F8" rx="70.108" ry="16.4216" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="113" x="19.608" y="87.1638">xagawa-ntru-test</text><ellipse cx="214.8275" cy="83.3655" fill="#F8F8F8" rx="57.3275" ry="13.8655" style="stroke: #383838; stroke-width: 0.5;"/><text fill="#000000" font-family="Tahoma, sans-serif" font-size="12" font-weight="bold" lengthAdjust="spacingAndGlyphs" textLength="81" x="174.3275" y="87.1077">xagawa-test</text><!--link <b>clrs-test</b> to <b>lwe-based-idscheme</b>--><!--link <b>clrs-test</b> to <b>xagawa-ntru-test</b>--><!--link <b>xagawa-ntru-test</b> to <b>xagawa-test</b>--><script type="text/plantuml"><![CDATA[
+@startuml
+
+scale max 1920 width
+top to bottom direction
+
+skinparam nodesep 11
+skinparam ranksep 22
+skinparam monochrome true
+skinparam shadowing false
+skinparam defaultFontName Tahoma
+skinparam defaultFontSize 12
+skinparam roundCorner 6
+skinparam dpi 150
+skinparam arrowColor black
+skinparam arrowThickness 0.5
+skinparam packageTitleAlignment left
+
+skinparam usecase {
+  borderThickness 0.5
+}
+
+skinparam rectangle {
+  borderThickness 0.5
+}
+
+skinparam component {
+  borderThickness 1
+}
+
+
+(<b>clrs-test</b>)
+(<b>lwe-based-idscheme</b>)
+(<b>xagawa-ntru-test</b>)
+(<b>xagawa-test</b>)
+
+
+
+@enduml
+
+
+' View and edit on https://arkit.pro
+]]></script></g></svg>
