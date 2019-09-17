@@ -155,7 +155,7 @@ function v2(z){
 	//print(sonuc_modp);
 
 	for(var i=0; i<glob_ka;i++){
-		if(sonuc_modp[i]>tolerance){
+		if(sonuc_modp[i]>tolerance){ //TOFIX!
 			print("Failed!");
 			return;
 		}
@@ -169,8 +169,7 @@ var nu = 0.125,
 	q = 1024, 
 	m = 256,
 	ka = 512,
-	to = 80,
-	tolerance = 1024;
+	to = 80;
 
 
 function testidscheme() {
@@ -181,7 +180,6 @@ function testidscheme() {
 	print("q = " + q);
 	print("ka = " + ka);
 	print("to = " + to);
-	print("Tolerance = " + tolerance);
 	keyGeneration(m, ka, to, q);
 
 	print("Prover: computes a blinding factor b.");

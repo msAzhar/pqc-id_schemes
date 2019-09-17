@@ -64,7 +64,7 @@ function keyGeneration(n, m, q) {
 }
 
 var glob_r1,glob_r2,glob_r3;
-var glob_u, glob_Aus;
+var glob_u, glob_us, glob_Aus;
 var glob_perm1,glob_perm2,glob_perm3; //permutations
 
 // Prover: p1()
@@ -86,15 +86,12 @@ function p1(){ // A,s,b
 
 	for (var i = 0; i < glob_m; i++){
 		gamma[i] = IDscheme.nextInt(glob_q);
-		if(gamma[i]==0)
-			gamma[i]=IDscheme.nextInt(glob_q);
 	}
 
 	sigma = Math.floor(Math.random() * (glob_n-1)); //sigma \in S_n
 	glob_sigma = sigma;
 
-	var perm1 = [];
-	perm1 = IDscheme.knuth_shuffle(gamma, sigma);
+	var perm1 = IDscheme.knuth_shuffle(gamma, glob_sigma);
 
 	var us = IDscheme.addVectors(u,s);
 
@@ -200,15 +197,17 @@ function v2(c, params){
 		comp1 = com(resp[3],resp[0]); 
 		
 		// Pi_gamma,_sigma(A(u+s))
+		//var d = IDscheme.transpose(resp[2]);
+		//var aus = IDscheme.vectorMultiplyMatrix(d,A_matrix); // A(u+s)
 		var part1 = IDscheme.knuth_shuffle(resp[2], glob_sigma); 
 		// compute c2=com(Pi_gamma,_sigma(A(u+s));r2)
 		comp2 = com(part1,resp[1]); 
-		/*
+		
 		print("C1");
-		print(comp2);
+		print(comp1);
 		print("C2");
 		print(comp2);
-		*/
+		
 		if( comp1==c1 && comp2==c2){
 			print("Success!");
 		}else{
@@ -227,10 +226,9 @@ function v2(c, params){
 			au_b[i] = resp[2][i] + resp[3][i];
 		}
 		var part1 = IDscheme.addVectors(resp[2], resp[3]); 
-		var part2 = IDscheme.knuth_shuffle(part1, glob_sigma); 
 		
 		// compute c3=com(Pi_gamma,_sigma(Au+b);r3)
-		comp2 = com(part2,resp[1]); 
+		comp2 = com(part1,resp[1]); 
 
 		comp3 = IDscheme.hw(resp[3]); //HW(Pi_gamma,_sigma(e))
 

@@ -460,9 +460,21 @@ function sha256(ascii) {
 	return result;
 }
 
+function assign(a){
+	 var result = [a.length];
+
+        for (var i = 0; i < a.length; i++) {
+            result[i] = a[i] ;
+        }
+
+        return result;
+}
+
 //Shuffles elements of an array depending on sigma, Knuth Shuffle is used
 function knuth_shuffle(array, sigma) {
-  var shuffled_array = [];
+  //var shuffled_array = [];
+  var result =[];
+  var shuffled_array = assign(array);
   var currentIndex = array.length, temporaryValue, fixedIndex;//randomIndex;
 
   // While there remain elements to shuffle...
@@ -479,7 +491,8 @@ function knuth_shuffle(array, sigma) {
     shuffled_array[fixedIndex] = temporaryValue;
   }
 
-  return array;
+  result = shuffled_array; 
+  return result;
 }
 
 //Matrix inversion 

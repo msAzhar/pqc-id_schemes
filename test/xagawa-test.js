@@ -13,11 +13,13 @@ var c1,
 
 //--------------------------------------------------------------------------------------
 
+
+//NOTE: as sigma's value for a knuth_shuffle 5 is used  
 //commitment function
 function com(){
 	var param;
 	if(arguments.length != 1){
-		param = IDscheme.knuth_shuffle(arguments[1]);
+		param = IDscheme.knuth_shuffle(arguments[1],5);
 		return IDscheme.sha256(param);
 	}else{
 		param = arguments[0];
@@ -75,12 +77,12 @@ function p1(){ // A,y,x
 	var ar = IDscheme.vectorMultiplyMatrix(r, amatrix);
 	var pr;
 
-	pr = IDscheme.knuth_shuffle(r); // c2
+	pr = IDscheme.knuth_shuffle(r,5); // c2
 	//print(pr);
 	
 	c1 = com("pi",ar);
 	c2 = com(pr); // com(pi(r))
-	c3 = com(IDscheme.knuth_shuffle(z)); // com(pi(x+r))
+	c3 = com(IDscheme.knuth_shuffle(z,5)); // com(pi(x+r))
 
 	print("c1:" + c1);
 	print("c2:" + c2);
@@ -108,8 +110,8 @@ function p2(c){
 	//print(ch);
 	if(ch == 1){
 		r = r_vector;
-		s = IDscheme.knuth_shuffle(x_vector);
-		t = IDscheme.knuth_shuffle(r);
+		s = IDscheme.knuth_shuffle(x_vector,5);
+		t = IDscheme.knuth_shuffle(r,5);
 		resp[0] = c2;
 		resp[1] = c3;
 		resp[2] = s;
@@ -176,7 +178,7 @@ function v2(c, params){
 		//print(resp[0]); //c2
 		/*print("com(t)");
 		print(comp2);*/
-		if( resp[0] == comp2 && resp[1]==comp1){//comp(resp[1], comp1)){ // c2==com(t) && c3==(s+t)
+		if(resp[0] == comp2 && resp[1]==comp1){//comp(resp[1], comp1)){ // c2==com(t) && c3==(s+t)
 			print("Success!");
 		}else{
 			print("Failed!");
@@ -195,7 +197,7 @@ function v2(c, params){
 		var t = cikar(d,y);
 		
 		comp1 = com(resp[2],t);// com(fi,Au-y)
-		comp2 = com(IDscheme.knuth_shuffle(resp[3])); //com(pi(u))
+		comp2 = com(IDscheme.knuth_shuffle(resp[3],5)); //com(pi(u))
 		
 		if( resp[0] == comp1 && resp[1] == comp2){ // c1==com(fi,Au-y) && c3==com(fi(u))
 			print("Success!");
@@ -212,7 +214,7 @@ function v2(c, params){
 		var av = IDscheme.vectorMultiplyMatrix(temp, amatrix); // Av
 		
 		comp1 = com(resp[2],av); //com(psi,Av)
-		comp2 = com(IDscheme.knuth_shuffle(resp[3])); // com(psi(v))
+		comp2 = com(IDscheme.knuth_shuffle(resp[3],5)); // com(psi(v))
 		/*print("Com1:");
 		print(comp1);
 		print("C1:");
