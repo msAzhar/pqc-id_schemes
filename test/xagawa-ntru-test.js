@@ -43,15 +43,37 @@ function keyGeneration(n, q) {
 		at[i] = IDscheme.nextInt(q);
 	}
 
-
-	for (var i = 0; i < n; i++) {
-		xh[i] = IDscheme.nextInt(q);
+	// temps 
+	var t1 = [];
+	var t2 = [];
+	
+	// d's value is n/2-1
+	for (var i = 0; i < (n/2); i++) {
+		t1[i] = 1;
 	}
 
-	for (var i = 0; i < n; i++) {
-		xt[i] = IDscheme.nextInt(q);
+	// n's value is 677
+	for (var i = (n-1)/2; i < n; i++) {
+		t1[i] = 0;
 	}
+	
+	//print(t1);
+	xh = IDscheme.shuffle(t1);
+	/*
+	print("xh:");
+	print(xh);
+	print(xh.length); //677
+	*/
+	t2[0] = 1;
 
+	for (var i = 1; i < n; i++) {
+		t2[i] = 0;
+	}
+	
+	xt = IDscheme.shuffle(t2);
+
+	print("Ah:"+ah.length);
+	print("Xh:"+xh.length);
 	var part1 = IDscheme.vectorMultiply(ah,xh);
 	var part2 = IDscheme.vectorMultiply(at,xt);
 
@@ -88,15 +110,18 @@ function p1(){ //
 	sigma = Math.floor(Math.random() * (4)); //glob_q-1
 	glob_sigma = sigma;
 
-	var part1 = IDscheme.knuth_shuffle(rh, sigma); 
-	var part2 = IDscheme.knuth_shuffle(rt, sigma); 
+	var part1 = IDscheme.knuth_shuffle(rh, glob_sigma); 
+	var part2 = IDscheme.knuth_shuffle(rt, glob_sigma); 
 
 	var prt1 = IDscheme.addVectors(rh,sk_xh);
 	var prt2 = IDscheme.addVectors(rt,sk_xt);
+
+	var p1 = IDscheme.knuth_shuffle(prt1,glob_sigma);
+	var p2 = IDscheme.knuth_shuffle(prt2,glob_sigma);
 	
 	c1 = com("pih","pit",y);
 	c2 = com(part1,part2); // com(pi(r_h),pi(r_t))
-	c3 = com(prt1,prt2); // com(pi(x+r)_h,pi(x+r)_t)
+	c3 = com(p1,p2); // com(pi(x+r)_h,pi(x+r)_t)
 	
 	print("c1:" + c1);
 	print("c2:" + c2);
@@ -174,7 +199,7 @@ function v2(c, params){
 		//c1hesabi
 		comp1 = com(resp[0],resp[1],part4);
 		//c3 hesabi:
-		comp2 = com(IDscheme.knuth_shuffle(resp[2]),IDscheme.knuth_shuffle(resp[3])); //com(pi(u))
+		comp2 = com(IDscheme.knuth_shuffle(resp[2],glob_sigma),IDscheme.knuth_shuffle(resp[3],glob_sigma)); //com(pi(u))
 		
 		if(  comp1==c1 && comp2==c3){ 
 			print("Success!");
@@ -189,7 +214,7 @@ function v2(c, params){
 		var part3 = IDscheme.addVectors(part1, part2);
 
 		comp1 = com(resp[0],resp[1],part3); //c1=com()
-		comp2 = com(IDscheme.knuth_shuffle(resp[2]),IDscheme.knuth_shuffle(resp[3]));
+		comp2 = com(IDscheme.knuth_shuffle(resp[2],glob_sigma),IDscheme.knuth_shuffle(resp[3],glob_sigma));
 
 		if( c1==comp1 && c2==comp2){ 
 			print("Success!");
@@ -214,17 +239,32 @@ function testidscheme() {
 	print("Parameters Set:");
 	print("n = " + n);
 	print("q = " + q);
+	var t0 = new Date().getTime();
 	keyGeneration(n, q);
+	var t1 = new Date().getTime();
 
-	print("Prover: compute commitments c1, c2 and c3:");
+	//print("Prover: compute commitments c1, c2 and c3:");
 	p1();
+	var t2 = new Date().getTime();
 	var ch;
 	ch = v1();
-	print("Verifier: sends a challenge: " + ch);
+	/*print("Verifier: sends a challenge: " + ch);
 	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + ch + ")");
 	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
+	*/
+	var t3 = new Date().getTime();
 	var response = p2(ch);
+	var t4 = new Date().getTime();
 	v2(ch,response);
+	var t5 = new Date().getTime();
+	print("Ch: "+ch);
+	print("Time required by functions in ms:");
+	print("Key Generation: " + (t1-t0) + " milliseconds");
+	print("Prover (Computations of commitments): " + (t2-t1) + " milliseconds");
+	print("Prover (Revealing some parameters): " + (t4-t3) + " milliseconds");
+	print("Verifier (Checking commitments' correctness): " + (t5-t4) + " milliseconds");
+
+
 
 }
 //***********************************************************
