@@ -64,7 +64,7 @@ function p1(){ // A,y,x
 	x = x_vector;
 
 	for (var i = 0; i < glob_m; i++) {
-		r[i] = IDscheme.nextInt(glob_q);
+		r[i] = IDscheme.randInt(glob_q);
 	}
 
 	r_vector = r;
@@ -244,17 +244,31 @@ function testidscheme() {
 	print("n = " + n);
 	print("m = " + m);
 	print("q = " + q);
+
+	var t0 = new Date().getTime();
 	keyGeneration(n, m, q);
+	var t1 = new Date().getTime();
 
 	print("Prover: compute commitments c1, c2 and c3:");
+	var t2 = new Date().getTime();
 	p1();
+	var t3 = new Date().getTime();
 	var ch;
 	ch = v1();
 	print("Verifier: sends a challenge: " + ch);
 	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + ch + ")");
 	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
+	var t4 = new Date().getTime();
 	var response = p2(ch);
+	var t5 = new Date().getTime();
 	v2(ch,response);
+	var t6 = new Date().getTime();
+
+	print("Time required by functions in ms:");
+	print("Key Generation: " + (t1-t0) + " milliseconds");
+	print("Prover (Computations of commitments): " + (t3-t2) + " milliseconds");
+	//print("Prover (Revealing some parameters): " + (t5-t4) + " milliseconds");
+	print("Verifier (Checking commitments' correctness): " + (t6-t5) + " milliseconds");
 
 }
 //***********************************************************

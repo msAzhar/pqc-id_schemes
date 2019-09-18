@@ -77,14 +77,14 @@ function p1(){ // A,y,x
 	x = x_vector; //print(x); //print(p_matrix);
 
 	for (var i = 0; i < glob_m; i++) { // u = Z_q^m
-		u[i] = IDscheme.nextInt(glob_q);
+		u[i] = IDscheme.randInt(glob_q);
 	}
 
 	u_vector = u;
 
 	for (var i = 0; i < glob_n; i++) { // r0 = {0,1}^n, r1 = {0,1}^n
-		r0[i] = IDscheme.nextInt(2);
-		r1[i] = IDscheme.nextInt(2);
+		r0[i] = IDscheme.randInt(2);
+		r1[i] = IDscheme.randInt(2);
 	}
 
 	glob_r0 = r0;
@@ -210,6 +210,7 @@ function v3(c, params, betha_){
 		var pmatrix = p_sigma_matrix;
 		var y = y_Ax;
 		var p_matrix = IDscheme.matrix_invert(pmatrix);
+
 		/*
 		print("A matrix");
 		print(amatrix);
@@ -280,16 +281,22 @@ function testidscheme() {
 	print("n = " + n);
 	print("m = " + m);
 	print("q = " + q);
+	var t0 = new Date().getTime();
 	keyGeneration(n, m, q);
+	var t1 = new Date().getTime();
 
 	print("Prover: compute commitments c1, c2:");
+	var t2 = new Date().getTime();
 	p1();
+	var t3 = new Date().getTime();
 	var alfa;
 	alfa = v1();
 
 	print("Verifier: computes and sends alpha : " + alfa);
 	
+	var t4 = new Date().getTime();
 	var resp_p2 = p2(alfa);
+	var t5 = new Date().getTime();
 
 	print("Prover: computes and sends betha.(betha = P_sigma(u+alpha.x))");
 	
@@ -299,7 +306,15 @@ function testidscheme() {
 	var resp_p3 = p3(b);
 	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + b + ")");
 	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
+	var t6 = new Date().getTime();
 	var resp = v3(b,resp_p3, resp_p2); // ch, resp_p3, betha
+	var t7 = new Date().getTime();
+
+	print("Time required by functions in ms:");
+	print("Key Generation: " + (t1-t0) + " milliseconds");
+	print("Prover (Computations of commitments): " + (t3-t2) + " milliseconds");
+	print("Prover (Revealing some parameters): " + (t5-t4) + " milliseconds");
+	print("Verifier (Checking commitments' correctness): " + (t7-t6) + " milliseconds");
 }
 //***********************************************************
 function print(message) {

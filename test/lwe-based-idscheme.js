@@ -40,7 +40,7 @@ function keyGeneration(n, m, q) {
 
 	// s is sk
 	for (var i = 0; i < glob_m; i++) { 
-		s[i] = IDscheme.nextInt(glob_q);
+		s[i] = IDscheme.randInt(glob_q);
 	}
 	
 	// b = As + e
@@ -80,12 +80,12 @@ function p1(){ // A,s,b
 	b = b_vector;
 	s=glob_s;
 	for (var i = 0; i < glob_m; i++){
-		u[i] = IDscheme.nextInt(glob_q);
+		u[i] = IDscheme.randInt(glob_q);
 	}
 	glob_u = u;
 
 	for (var i = 0; i < glob_m; i++){
-		gamma[i] = IDscheme.nextInt(glob_q);
+		gamma[i] = IDscheme.randInt(glob_q);
 	}
 
 	sigma = Math.floor(Math.random() * (glob_n-1)); //sigma \in S_n
@@ -108,9 +108,9 @@ function p1(){ // A,s,b
 	var perm3 = IDscheme.knuth_shuffle(au_b,sigma);
 
 	for (var i = 0; i < glob_n; i++) { // r0 = {0,1}^n, r1 = {0,1}^n
-		r1[i] = IDscheme.nextInt(2);
-		r2[i] = IDscheme.nextInt(2);
-		r3[i] = IDscheme.nextInt(2);
+		r1[i] = IDscheme.randInt(2);
+		r2[i] = IDscheme.randInt(2);
+		r3[i] = IDscheme.randInt(2);
 	}
 
 	glob_perm1 = perm1; //Gamma Sigma nin
@@ -292,20 +292,35 @@ function testidscheme() {
 	print("n = " + n);
 	print("m = " + m);
 	print("q = " + q);
+
+	var t0 = new Date().getTime();
 	keyGeneration(n, m, q);
+	var t1 = new Date().getTime();
+
 
 	print("Prover: compute commitments c1, c2 and c3:");
+	var t2 = new Date().getTime();
 	p1();
+	var t3 = new Date().getTime();
+
 	var ch;
 	ch = v1();
 
 	print("Verifier: sends a challenge: " + ch);
 	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + ch + ")");
 	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
-	
-	var response = p2(ch);
-	v2(ch,response);
 
+	var t4 = new Date().getTime();
+	var response = p2(ch);
+	var t5 = new Date().getTime();
+	v2(ch,response);
+	var t6 = new Date().getTime();
+
+	print("Time required by functions in ms:");
+	print("Key Generation: " + (t1-t0) + " milliseconds");
+	print("Prover (Computations of commitments): " + (t3-t2) + " milliseconds");
+	//print("Prover (Revealing some parameters): " + (t5-t4) + " milliseconds");
+	print("Verifier (Checking commitments' correctness): " + (t6-t5) + " milliseconds");
 }
 //***********************************************************
 function print(message) {

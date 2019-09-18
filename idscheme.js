@@ -22,7 +22,7 @@ function initMatrixRandom(x, y, q) {
 	for (var i = 0; i < x; i++) {
        		matrix[i] = new Array(y);
 		for (var j = 0; j < y; j++) {
-			matrix[i][j] = nextInt(q);
+			matrix[i][j] = randInt(q);
 		}
 	}
 	return matrix;
@@ -276,7 +276,7 @@ function modVector(v, q) {
 }
 
 //Returns the next pseudorandom, uniformly distributed integer between 0(inclusive) and q-1(inclusive)
-function nextInt(q) {
+function randInt(q) {
 	return Math.floor(Math.random() * q);
 }
 
@@ -590,7 +590,7 @@ function matrix_invert(M){
 }
 
 //Returns the next pseudorandom, uniformly distributed integer between 0(inclusive) and q-1(inclusive)
-function nextInt(q) {
+function randInt(q) {
     return Math.floor(Math.random() * q);
 }
 
@@ -640,5 +640,5 @@ module.exports = {
 	knuth_shuffle,
 	matrix_invert,
 	addVectors,
-	nextInt
+	randInt
 };

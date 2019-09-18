@@ -36,11 +36,11 @@ function keyGeneration(n, q) {
 	glob_q = q;
 
 	for (var i = 0; i < n; i++) {
-		ah[i] = IDscheme.nextInt(q);
+		ah[i] = IDscheme.randInt(q);
 	}
 
 	for (var i = 0; i < n; i++) {
-		at[i] = IDscheme.nextInt(q);
+		at[i] = IDscheme.randInt(q);
 	}
 
 	// temps 
@@ -97,11 +97,11 @@ function p1(){ //
 	var sigma;
 
 	for (var i = 0; i < glob_n; i++){
-		rh[i] = IDscheme.nextInt(glob_q);
+		rh[i] = IDscheme.randInt(glob_q);
 	}
 
 	for (var i = 0; i < glob_n; i++){
-		rt[i] = IDscheme.nextInt(glob_q);
+		rt[i] = IDscheme.randInt(glob_q);
 	}
 
 	glob_rh = rh;
@@ -244,25 +244,26 @@ function testidscheme() {
 	var t1 = new Date().getTime();
 
 	//print("Prover: compute commitments c1, c2 and c3:");
-	p1();
 	var t2 = new Date().getTime();
+	p1();
+	var t3 = new Date().getTime();
 	var ch;
 	ch = v1();
 	/*print("Verifier: sends a challenge: " + ch);
 	print("Prover: reveals some parameters depending on challenge.(Current challenge is: " + ch + ")");
 	print("Verifier: checks commitment correctness from information revealed by prover and accept in case of success. ");
 	*/
-	var t3 = new Date().getTime();
-	var response = p2(ch);
 	var t4 = new Date().getTime();
-	v2(ch,response);
+	var response = p2(ch);
 	var t5 = new Date().getTime();
+	v2(ch,response);
+	var t6 = new Date().getTime();
 	print("Ch: "+ch);
 	print("Time required by functions in ms:");
 	print("Key Generation: " + (t1-t0) + " milliseconds");
-	print("Prover (Computations of commitments): " + (t2-t1) + " milliseconds");
-	print("Prover (Revealing some parameters): " + (t4-t3) + " milliseconds");
-	print("Verifier (Checking commitments' correctness): " + (t5-t4) + " milliseconds");
+	print("Prover (Computations of commitments): " + (t3-t2) + " milliseconds");
+	//print("Prover (Revealing some parameters): " + (t5-t4) + " milliseconds");
+	print("Verifier (Checking commitments' correctness): " + (t6-t5) + " milliseconds");
 
 
 

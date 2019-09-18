@@ -35,12 +35,12 @@ function keyGeneration(m, ka, to, q) {
 
 	//s1
 	for (var i = 0; i < ka; i++) { 
-		s1[i] = IDscheme.nextInt(glob_q);
+		s1[i] = IDscheme.randInt(glob_q);
 	}
 	
 	//s2
 	for (var i = 0; i < to; i++) { 
-		s2[i] = IDscheme.nextInt(glob_q);
+		s2[i] = IDscheme.randInt(glob_q);
 	}
 
 	//shared keys
@@ -54,7 +54,7 @@ function p1(){
 
 	//blind factor b
 	for (var i = 0; i < glob_ka; i++) { 
-		b[i] = IDscheme.nextInt(glob_q);
+		b[i] = IDscheme.randInt(glob_q);
 	}
 
 	glob_b = b;
@@ -67,7 +67,7 @@ function v1(){
 
 	//random challenge vector aa
 	for (var i = 0; i < glob_to; i++) { 
-		a[i] = IDscheme.nextInt(glob_q);
+		a[i] = IDscheme.randInt(glob_q);
 	}
 
 	glob_a = a;
@@ -81,7 +81,7 @@ function p2(){
 	//TODO: Generate from Bernoulli distribution!
 	//vector v <- {0,1}^m according to the Bernoulli distribution(depending on X:error_distribution)
 	for (var i = 0; i < glob_m; i++) { 
-		v[i] = IDscheme.nextInt(2);
+		v[i] = IDscheme.randInt(2);
 	}
 
 	var part1 = IDscheme.addVectors(glob_s1, glob_b);
@@ -91,7 +91,7 @@ function p2(){
 	/*for (var i = glob_to; i < glob_ka; i++) { 
 		part2[i] = 0;
 	}*/
-	part2 = IDscheme.padding(part2,glob_ka);
+	var part3 = IDscheme.padding(part2,glob_ka);
 
 	//Padding
 	/*for (var i = glob_m; i < glob_ka; i++) { 
@@ -100,11 +100,11 @@ function p2(){
 
 	v = IDscheme.padding(v,glob_ka);
 
-	var part3 = IDscheme.addVectors(part1, part2); 
+	var part4 = IDscheme.addVectors(part1, part3); 
 	//print("Part3:");
 	//print(part3);
 
-	z = IDscheme.addVectors(part3, v);
+	z = IDscheme.addVectors(part4, v);
 	//print("Z:");
 	//print(z);
 	
@@ -155,7 +155,8 @@ function v2(z){
 	//print(sonuc_modp);
 
 	for(var i=0; i<glob_ka;i++){
-		if(sonuc_modp[i]>tolerance){ //TOFIX!
+		print(sonuc_modp[i]);
+		if(sonuc_modp[i]>0){ //TOFIX!
 			print("Failed!");
 			return;
 		}
