@@ -19,6 +19,38 @@ var c1,
 
 //--------------------------------------------------------------------------------------
 
+// Array of locations for '1'
+function _indexes(v){
+	var b = [];
+	for(var i = 0; i<v.length; i++){
+		if(v[i] == 1){
+			b.push(i);
+		}
+	}
+	return b;
+}
+
+//Vector multiplication, c = a * b, a is a sparse vector
+function sparseVectorMultiply(a, b) {
+	if (b.length != a.length) {
+		alert("Vector length must agree");
+		return;
+	}
+	
+	var c = new Array(a.length);
+	for (var i = 0; i < a.length; i++) {
+		c[i] = 0;
+	}
+
+	//get array of locations
+	var d = _indexes(a);
+
+	for (var i = 0; i < d.length; i++) {
+		c[d[i]] = b[d[i]];
+	}
+	return c;
+}
+
 //commitment function
 function com(){
 	var param;
@@ -74,9 +106,26 @@ function keyGeneration(n, q) {
 
 	print("Ah:"+ah.length);
 	print("Xh:"+xh.length);
+	/*
+	var ts1 = new Date().getTime();
 	var part1 = IDscheme.vectorMultiply(ah,xh);
+	var ts2 = new Date().getTime();
+	print(ts2-ts1);
+	var ts3 = new Date().getTime();
 	var part2 = IDscheme.vectorMultiply(at,xt);
-
+	var ts3 = new Date().getTime();
+	print(ts2-ts1);
+	*/
+	
+	var ts1 = new Date().getTime();
+	var part1 = sparseVectorMultiply(xh,ah);
+	var ts2 = new Date().getTime();
+	print(ts2-ts1);
+	var ts3 = new Date().getTime();
+	var part2 = sparseVectorMultiply(xt,at);
+	var ts4 = new Date().getTime();
+	print(ts4-ts3);
+	
 	y = IDscheme.addVectors(part1,part2);
 	
 	a_h = ah;

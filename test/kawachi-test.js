@@ -1,4 +1,4 @@
-// Xagawa
+// Kawachi's
 
 var IDscheme = require('../idscheme.js');
 //-----------------------------------Global variables-----------------------------------
@@ -13,13 +13,84 @@ var c1,
 
 //--------------------------------------------------------------------------------------
 
+//Addition of vectors, c = a + b
+function addVectors(a,b){
+	if (a.length != b.length) {
+		alert("Vector length must agree");
+		return;
+	}
+	
+	var c = new Array(a.length);
+	for (var i = 0; i < a.length; i++) {
+		c[i] = a[i] + b[i];
+	}
+	return c;
+}
+
+//Addition of vectors, c = a + b, a is sparse vector
+function sparseVectorAddition(a,b){
+	if (a.length != b.length) {
+		alert("Vector length must agree");
+		return;
+	}
+	
+	//get array of indexes
+	var d = _indexes(a);
+
+	var c = new Array(a.length);
+	for (var i = 0; i < d.length; i++) {
+		c[d[i]] = b[d[i]] + 1;
+	}
+	return c;
+}
+
+
+// Array of locations for '1'
+function _indexes(v){
+	var b = [];
+	for(var i = 0; i<v.length; i++){
+		if(v[i] == 1){
+			b.push(i);
+		}
+	}
+	return b;
+}
+
+function sparseVectorMultiplyMatrix(a,B) {
+	
+	var k = a.length;
+	var m = B.length;
+	var n = B[0].length;
+	
+	if (k != m) {
+		alert("Inner dimensions must match!");
+		return;
+	}
+	
+	var t = new Array(n);
+	for (var j = 0; j < n; j++) {
+		t[j] = 0;
+	}
+	
+
+	//get array of indexes
+	var d = _indexes(a);
+	
+	for(var k = 0; k < d.length; k++) {
+		//print(B[d[k]]);
+		t=addVectors(t,B[d[k]])
+	}
+
+	return t;
+}
 
 //NOTE: as sigma's value for a knuth_shuffle 5 is used  
 //commitment function
 function com(){
 	var param;
 	if(arguments.length != 1){
-		param = IDscheme.knuth_shuffle(arguments[1],5);
+		//param = IDscheme.knuth_shuffle(arguments[1],5);
+		param = (arguments[0]+arguments[1]);
 		return IDscheme.sha256(param);
 	}else{
 		param = arguments[0];
@@ -29,8 +100,9 @@ function com(){
 
 function keyGeneration(n, m, q) {
 	var amatrix = IDscheme.initMatrixRandom(m, n, q); // A, n*m
+	//print(amatrix);
 	var x;	
-	var ss = new Array(m);
+	var ss = new Array(m); //temp var
 	glob_m = m;
 	glob_q = q;
 
@@ -45,10 +117,13 @@ function keyGeneration(n, m, q) {
 	x = IDscheme.shuffle(ss);
 	//print(x);
 	
-	var x_transpose = x;
-	var y = IDscheme.vectorMultiplyMatrix(x_transpose, amatrix);
+	var ts1 = new Date().getTime();
+	//var y = IDscheme.vectorMultiplyMatrix(x, amatrix);
 	
-	
+	var y = sparseVectorMultiplyMatrix(x, amatrix);
+	var ts2 = new Date().getTime();
+	print(ts2-ts1);
+	//print(y);
 	A_matrix = amatrix;
 	x_vector = x; // sk
 	y_Ax = y; // pk
@@ -60,7 +135,7 @@ function p1(){ // A,y,x
 	var amatrix = A_matrix;
 	var x;
 	var r = new Array(glob_m);
-	var z = new Array(glob_m);
+	var z = new Array(glob_m); //temp, x+r icin
 	x = x_vector;
 
 	for (var i = 0; i < glob_m; i++) {
@@ -69,9 +144,12 @@ function p1(){ // A,y,x
 
 	r_vector = r;
 
+/*
 	for (var i = 0; i < glob_m; i++){
 		z[i] = x[i] + r[i];
 	}
+	*/
+	z = addVectors(x,r);
 
 	var rr = IDscheme.transpose(r);
 	var ar = IDscheme.vectorMultiplyMatrix(r, amatrix);
@@ -100,8 +178,8 @@ function v1(){
 function p2(c){
 	var ch = c;
 	var s,t;
-	var fi;
-	var psi,v;
+	var fi = "pi";
+	var psi = "pi";
 	var r, x;
 	var u = new Array();
 	var resp = [];
@@ -124,7 +202,6 @@ function p2(c){
 		for (var i = 0; i < glob_m; i++){
 			u[i] = x[i] + r[i];
 		}
-
 		//u = c3; // u=(x+r)
 		resp[0] = c1;
 		resp[1] = c3;
@@ -175,10 +252,13 @@ function v2(c, params){
 		comp1 = com(s_ve_t); // s+t
 		comp2 = com(resp[3]); // com(t); t = pi(r)
 	
+		// hw control
+		var hw_s = IDscheme.hw(resp[2]);
+		//print(hw_s==(glob_m/2));
 		//print(resp[0]); //c2
 		/*print("com(t)");
 		print(comp2);*/
-		if(resp[0] == comp2 && resp[1]==comp1){//comp(resp[1], comp1)){ // c2==com(t) && c3==(s+t)
+		if(resp[0] == comp2 && resp[1]==comp1 && hw_s==(glob_m/2) ){//comp(resp[1], comp1)){ // c2==com(t) && c3==(s+t)
 			print("Success!");
 		}else{
 			print("Failed!");
@@ -187,18 +267,27 @@ function v2(c, params){
 	}
 	else if(ch == 2){
 		var comp1, comp2,comp3; // computations
-		var temp,y;
+		var u,y;
 		var amatrix = new Array();
 		amatrix = A_matrix;
-		temp = resp[3]; // u=x+r (c3)
+		u = resp[3]; // u=x+r (c3)
 		y = y_Ax;
-		var tt = IDscheme.transpose(temp);
-		var d = IDscheme.vectorMultiplyMatrix(temp, amatrix);
+		var d = IDscheme.vectorMultiplyMatrix(u, amatrix);
 		var t = cikar(d,y);
 		
 		comp1 = com(resp[2],t);// com(fi,Au-y)
 		comp2 = com(IDscheme.knuth_shuffle(resp[3],5)); //com(pi(u))
-		
+		/*		
+		print("Com1:");
+		print(comp1);
+		print("C1:");
+		print(resp[0]);
+		print("Com3:");
+		print(comp2);
+		print("C3:");
+		print(resp[1]);
+		*/
+
 		if( resp[0] == comp1 && resp[1] == comp2){ // c1==com(fi,Au-y) && c3==com(fi(u))
 			print("Success!");
 		}else{
@@ -215,11 +304,17 @@ function v2(c, params){
 		
 		comp1 = com(resp[2],av); //com(psi,Av)
 		comp2 = com(IDscheme.knuth_shuffle(resp[3],5)); // com(psi(v))
-		/*print("Com1:");
+		/*
+		print("Com1:");
 		print(comp1);
 		print("C1:");
 		print(resp[0]);
+		print("Com2:");
+		print(comp2);
+		print("C2:");
+		print(resp[1]);
 		*/
+
 		if( resp[0]==comp1 && resp[1]== comp2){ // c1==com(psi, Av) && c2==com(psi(v) 
 					print("Success!");
 		}else{

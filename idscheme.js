@@ -74,6 +74,19 @@ function vectorSubtract(a, b) {
 	return c;
 }
 
+//Vector subtraction with padding, c = a - b
+function vectorSubtractWithPadding(a, b) {
+	if (a.length > b.length) {
+		var b_t = padding(b, a.length);
+	}
+	
+	var c = new Array(a.length);
+	for (var i = 0; i < a.length; i++) {
+		c[i] = a[i] - b_t[i];
+	}
+	return c;
+}
+
 //Vector multiplication, c = a * b
 function vectorMultiply(a, b) {
 	if (b.length != a.length) {
@@ -608,6 +621,19 @@ function addVectors(a,b){
 	return c;
 }
 
+//Addition of vectors with padding, c = a + b
+function addVectorsWithPadding(a,b){
+	if (a.length > b.length) {
+		var b_t = padding(b, a.length);
+	}
+	
+	var c = new Array(a.length);
+	for (var i = 0; i < a.length; i++) {
+		c[i] = a[i] + b_t[i];
+	}
+	return c;
+}
+
 // Hamming Weight... amount of 1s
 function hw(v){
 		wt=0;
@@ -624,6 +650,7 @@ module.exports = {
 	multiply,
 	multiplyMod,
 	vectorSubtract,
+	vectorSubtractWithPadding,
 	vectorMultiply,
 	initMatrixRandom,
 	transpose,
@@ -640,5 +667,6 @@ module.exports = {
 	knuth_shuffle,
 	matrix_invert,
 	addVectors,
+	addVectorsWithPadding,
 	randInt
 };
