@@ -1,4 +1,4 @@
-// CLRS
+// Soysaldi's idscheme
 
 var IDscheme = require('../idscheme.js');
 //-----------------------------------Global variables-----------------------------------
@@ -284,7 +284,7 @@ var n = 512,
 	m = 2048;
 
 function testidscheme() {
-	print("CLRS (Cayrel et al.) ID Scheme:");
+	print("Soysaldi's ID Scheme:");
 	print("Parameters Set:");
 	print("n = " + n);
 	print("m = " + m);

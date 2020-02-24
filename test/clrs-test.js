@@ -386,13 +386,12 @@ function p1(){ // A,y,x
 
 	glob_r0 = r0;
 	glob_r1 = r1;
-	// WARN: glob_q instead of glob_m is used.
 	sigma = Math.floor(Math.random() * (glob_q-1)); //glob_m-1
 	glob_sigma = sigma;
 
 
 	//psigma_matrix = IDscheme.knuth_shuffle(p_matrix, sigma); 
-//	print(psigma_matrix);
+	//	print(psigma_matrix);
 	//p_sigma_matrix = psigma_matrix; // global P matrix
 
 	p_sigma_matrix = p_matrix;
@@ -630,8 +629,6 @@ function testidscheme() {
 	var klp = generateIdentityMatrix(8);
 	print(klp);
 */
-
-
 
 	print("Prover: compute commitments c1, c2:");
 	var t2 = new Date().getTime();

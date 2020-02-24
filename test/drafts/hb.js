@@ -1,4 +1,4 @@
-// LWE-based idscheme
+// HB  authentication scheme
 
 var IDscheme = require('../idscheme.js');
 //-----------------------------------Global variables-----------------------------------
