@@ -1,31 +1,34 @@
-Framework for Lattice-based ID schemes (javascript)
+Framework for Lattice-based ID schemes 
 =====================================
 
 Amaç: Kimlik Doğrulama şemaları için bir framework oluşturmak. Bir ID scheme'i, Prover ve Verifier için gerekli olan fonksiyonları çağırarak uygulayabilmeliyiz. 
 
+### Post-Quantum Cryptography: Lattice-based Identification Schemes
+Bu çalışmada ele alınan identification scheme'ler, aşağıdaki tabloda dayalı olduğu problemlerle özetlenmiştir.
 
-### Fonksiyonlar
+| ID scheme                                          | Problems 						|
+|:---------------------------------------------------|:---------------------------------|
+| Lyubashevsky's Identification Scheme               | SVP in all lattices              |
+| Kawachi, Tanaka and Xagawa's Identification Scheme | SIS based              			|
+| CLRS Identification Scheme (Cayrel et al.)         | SIS based                        |
+| Xagawa and Tanaka's Identification Scheme          | based on NTRU and Stern's scheme |
+| Silva's LWE-based Identification Scheme                | LWE 								|
+| Soysaldi's Identification Scheme                          | SIS based 						|
+
+
+### Genel bir kimlik doğrulamanın uygulaması için ihtiyaç duyulan fonksiyonlar
 - `scalarMultiplyVector`
-- `scalarMultiplyMod`
-- `multiply`
-- `multiplyMod`
-- `vectorSubstract`
-- `vectorMultiply`
-- `initMatrixRandom`
-- `transpose`
-- `addMod`
-- `hw`
-- `encVectorMultiplyMatrix`
-- `decVectorMultiplyMatrix`
+- `vectorMultiplyMatrix`
 - `mod`
-- `matrix_invert`
 - `addVectors`
-- `nextInt`
+- `subtractVectors`
+- `initMatrixRandom`
+- `hw`
+- `matrix_invert`
 - `sha256`
 - `shuffle`
-- `knuth_shuffle`
 
-### Kullanım
+### Kullanım (Javascript)
 Öncellikle, bir IDscheme için gerekli olan fonksiyonların bulunduğu `idscheme.js` modülü dahil edilmelidir:
 
 ```javascript
@@ -60,29 +63,21 @@ function v2(){
 ...
 ``` 
 
-### Post-Quantum Cryptography: Lattice-based Identification Schemes
-Bu çalışmada referans olarak kullanılan survey'de verilen identification scheme'ler, aşağıdaki tabloda dayalı olduğu problemlerle özetlenmiştir.
-
-| ID scheme                                          | Problems 						|
-|:---------------------------------------------------|:---------------------------------|
-| Lyubashevsky's Identification Scheme               | SVP in all lattices              |
-| Kawachi, Tanaka and Xagawa's Identification Scheme | SIS based              			|
-| CLRS Identification Scheme (Cayrel et al.)         | SIS based                        |
-| Xagawa and Tanaka's Identification Scheme          | based on NTRU and Stern's scheme |
-| LWE-based Identification Scheme                    | LWE 								|
-| HB+ Identification Scheme                          | LWE-based 						|
-
 ### Test amaçlı implement edilen IDscheme'ler
 1. [Kawachi, Tanaka and Xagawa's Identification Scheme]
 2. [CLRS Identification Scheme (Cayrel et al.)]
 3. [Xagawa and Tanaka's Identification Scheme (based on NTRU and Stern's scheme)]
-4. [LWE-based Identification Scheme]
+4. [Silva's LWE-based Identification Scheme]
 
-[Kawachi, Tanaka and Xagawa's Identification Scheme]: ./test/xagawa-test.js
-[CLRS Identification Scheme (Cayrel et al.)]: ./test/clrs-test.js
-[Xagawa and Tanaka's Identification Scheme (based on NTRU and Stern's scheme)]: ./test/xagawa-ntru-test.js
-[LWE-based Identification Scheme]: ./test/lwe-based-idscheme.js
 
+[Kawachi, Tanaka and Xagawa's Identification Scheme]: ./id-schemes-js/test/xagawa-test.js
+[CLRS Identification Scheme (Cayrel et al.)]: ./id-schemes-js/test/clrs-test.js
+[Xagawa and Tanaka's Identification Scheme (based on NTRU and Stern's scheme)]: ./id-schemes-js/test/xagawa-ntru-test.js
+[Silva's LWE-based Identification Scheme]: ./id-schemes-js/test/lwe-based-idscheme.js
+
+### Kullanım (Java)
+
+### Kullanım (C)
 
 
 
