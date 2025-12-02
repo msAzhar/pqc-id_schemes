@@ -118,6 +118,7 @@ int keygen(PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M]){
 
 //TODO: prover_commitments
 int p_coms(Coms *coms_ptr, PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M], int rand_r[M]){
+    (void)pk_ptr;  // unused for Kawachi variant
     int c1[N] = {0};
     int c2[M] = {0};
     int c3[M] = {0}; 
@@ -136,7 +137,6 @@ int p_coms(Coms *coms_ptr, PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M]
     int sigma_and_Ar[1+N];
     concat_value_and_array(sigma_and_Ar, rand_sigma, N, c1);
 
-    BYTE local_buf_c1[SHA256_BLOCK_SIZE];
     com_func(coms_ptr->com_c1.buf_c1, sigma_and_Ar, sizeof(sigma_and_Ar));
 
     knuth_shuffle(shuffled_local_rand_r, local_rand_r, M, rand_sigma);
@@ -144,7 +144,6 @@ int p_coms(Coms *coms_ptr, PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M]
 	//printf("c2:\n");
 	assignVectorValues(c2, local_rand_r, M);
 	//printVector(c2, M);
-    BYTE local_buf_c2[SHA256_BLOCK_SIZE];
     com_func(coms_ptr->com_c2.buf_c2, shuffled_local_rand_r, sizeof(shuffled_local_rand_r));
 
 	//printf("c3:\n");
@@ -154,7 +153,6 @@ int p_coms(Coms *coms_ptr, PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M]
     assignVectorValues(rand_r, local_rand_r, M);
     knuth_shuffle(shuffled_sum_xr, c3, M, rand_sigma);
 
-    BYTE local_buf_c3[SHA256_BLOCK_SIZE];
     com_func(coms_ptr->com_c3.buf_c3, shuffled_sum_xr, sizeof(shuffled_sum_xr));
 
     coms_ptr->com_c1.sigma = rand_sigma;
