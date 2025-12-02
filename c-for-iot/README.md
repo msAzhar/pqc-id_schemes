@@ -20,19 +20,10 @@ The resulting executables are placed under `c-for-iot/build/<target>/`.
 
 ## Running under QEMU
 
-Each built binary is a freestanding ELF that can be executed with semihosting. After building the ARM target you can either call
-`qemu-system-arm` directly or rely on the `run-arm` make target:
+Each built binary is a freestanding ELF that can be executed with semihosting. Example (for the Kawachi demo):
 
 ```bash
-# Build the Cortex-M4 version of every demo
-make -C c-for-iot TARGET=arm ARM_TOOLCHAIN_PREFIX=arm-none-eabi
-
-# Run one of the schemes (defaults to kawachi) under QEMU with semihosting
-make -C c-for-iot TARGET=arm SCHEME=kawachi run-arm
-
-# Equivalent manual invocation if you prefer to run QEMU yourself
-qemu-system-arm -machine mps2-an386 -cpu cortex-m4 -kernel c-for-iot/build/arm/kawachi \
-  -semihosting -nographic
+qemu-system-arm -machine mps2-an386 -kernel c-for-iot/build/arm/kawachi -semihosting
 ```
 
-Pass any additional QEMU flags via `QEMU_EXTRA_ARGS="-d in_asm"` on the make command line if you need tracing. All schemes seed the portable RNG deterministically at startup; adjust the call to `rng_seed()` inside the individual `main` functions if a different seed is desired.
+All schemes seed the portable RNG deterministically at startup; adjust the call to `rng_seed()` inside the individual `main` functions if a different seed is desired.
