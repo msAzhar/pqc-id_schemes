@@ -1,5 +1,4 @@
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,6 +6,8 @@
 #include "idscheme_funcs.h"
 #include "portable_rng.h"
 #include "sha256.h"
+
+#define NELEMS(x)  (sizeof(x) / sizeof((x)[0]))
 
 #define _SUCCESS_ 0
 #define _FAILED_ 1
@@ -70,15 +71,16 @@ int v_challenge(void);
 void p_params(int ch, Resp_params *params_ptr, SKparams *sk_ptr, Coms *coms_ptr, int rand_r[M]);
 int v_check(int ch, Resp_params *params_ptr, PKparams *pk_ptr, Coms *coms_ptr, int matrix_A[][M]);
 
-static void com_func_ints(BYTE buf[SHA256_BLOCK_SIZE], const int *data, size_t len_words);
+void com_func(BYTE buf[SHA256_BLOCK_SIZE], BYTE data[]);
 int coms_equal(BYTE buf1[SHA256_BLOCK_SIZE], BYTE buf2[SHA256_BLOCK_SIZE]);
 
-static void com_func_ints(BYTE buf[SHA256_BLOCK_SIZE], const int *data, size_t len_words)
+void com_func(BYTE buf[SHA256_BLOCK_SIZE], BYTE data[])
 {
     SHA256_CTX ctx;
+    size_t len = NELEMS(data);
 
     sha256_init(&ctx);
-    sha256_update(&ctx, (const BYTE *)data, len_words * sizeof(int));
+    sha256_update(&ctx, data, len);
     sha256_final(&ctx, buf);
 }
 
@@ -116,7 +118,6 @@ int keygen(PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M]){
 
 //TODO: prover_commitments
 int p_coms(Coms *coms_ptr, PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M], int rand_r[M]){
-    (void)pk_ptr;  // unused for Kawachi variant
     int c1[N] = {0};
     int c2[M] = {0};
     int c3[M] = {0}; 
@@ -135,14 +136,16 @@ int p_coms(Coms *coms_ptr, PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M]
     int sigma_and_Ar[1+N];
     concat_value_and_array(sigma_and_Ar, rand_sigma, N, c1);
 
-    com_func_ints(coms_ptr->com_c1.buf_c1, sigma_and_Ar, 1 + N);
+    BYTE local_buf_c1[SHA256_BLOCK_SIZE];
+    com_func(coms_ptr->com_c1.buf_c1, sigma_and_Ar);
 
     knuth_shuffle(shuffled_local_rand_r, local_rand_r, M, rand_sigma);
 
 	//printf("c2:\n");
 	assignVectorValues(c2, local_rand_r, M);
 	//printVector(c2, M);
-    com_func_ints(coms_ptr->com_c2.buf_c2, shuffled_local_rand_r, M);
+    BYTE local_buf_c2[SHA256_BLOCK_SIZE];
+    com_func(coms_ptr->com_c2.buf_c2, shuffled_local_rand_r);
 
 	//printf("c3:\n");
 	addVectors(c3, sk_ptr->x, local_rand_r, M);
@@ -151,7 +154,8 @@ int p_coms(Coms *coms_ptr, PKparams *pk_ptr, SKparams *sk_ptr, int matrix_A[][M]
     assignVectorValues(rand_r, local_rand_r, M);
     knuth_shuffle(shuffled_sum_xr, c3, M, rand_sigma);
 
-    com_func_ints(coms_ptr->com_c3.buf_c3, shuffled_sum_xr, M);
+    BYTE local_buf_c3[SHA256_BLOCK_SIZE];
+    com_func(coms_ptr->com_c3.buf_c3, shuffled_sum_xr);
 
     coms_ptr->com_c1.sigma = rand_sigma;
     assignVectorValues(coms_ptr->com_c1.vector_Ar, c1, N);
@@ -199,12 +203,12 @@ int v_check(int ch, Resp_params *params_ptr, PKparams *pk_ptr, Coms *coms_ptr, i
         modVector(local_sum_xr, M, Q);
 
         BYTE local_buf_c3[SHA256_BLOCK_SIZE];
-        com_func_ints(local_buf_c3, local_sum_xr, M);
+        com_func(local_buf_c3, local_sum_xr);
 
         int com3_result = coms_equal(coms_ptr->com_c3.buf_c3, local_buf_c3);
 
         BYTE local_buf_c2[SHA256_BLOCK_SIZE];
-        com_func_ints(local_buf_c2, params_ptr->resp_param2, M);
+        com_func(local_buf_c2, params_ptr->resp_param2);
 
         int com2_result = coms_equal(coms_ptr->com_c2.buf_c2, local_buf_c2);
 
@@ -221,7 +225,7 @@ int v_check(int ch, Resp_params *params_ptr, PKparams *pk_ptr, Coms *coms_ptr, i
         concat_value_and_array(sigma_and_Ar, params_ptr->resp_param1_int, N, comp1_res);
 
         BYTE local_buf_c1[SHA256_BLOCK_SIZE];
-        com_func_ints(local_buf_c1, sigma_and_Ar, 1 + N);
+        com_func(local_buf_c1, sigma_and_Ar);
 
         int com1_result = coms_equal(coms_ptr->com_c1.buf_c1, local_buf_c1);
 
@@ -229,7 +233,7 @@ int v_check(int ch, Resp_params *params_ptr, PKparams *pk_ptr, Coms *coms_ptr, i
         knuth_shuffle(shuffled_sum_xr, params_ptr->resp_param2, M, params_ptr->resp_param1_int);
 
         BYTE local_buf_c3[SHA256_BLOCK_SIZE];
-        com_func_ints(local_buf_c3, shuffled_sum_xr, M);
+        com_func(local_buf_c3, shuffled_sum_xr);
 
         int com3_result = coms_equal(coms_ptr->com_c3.buf_c3, local_buf_c3);
 
@@ -244,7 +248,7 @@ int v_check(int ch, Resp_params *params_ptr, PKparams *pk_ptr, Coms *coms_ptr, i
         concat_value_and_array(sigma_and_Ar, params_ptr->resp_param1_int, N, comp2);
 
         BYTE local_buf_c1[SHA256_BLOCK_SIZE];
-        com_func_ints(local_buf_c1, sigma_and_Ar, 1 + N);
+        com_func(local_buf_c1, sigma_and_Ar);
 
         int com1_result = coms_equal(coms_ptr->com_c1.buf_c1, local_buf_c1);
 
@@ -252,7 +256,7 @@ int v_check(int ch, Resp_params *params_ptr, PKparams *pk_ptr, Coms *coms_ptr, i
         knuth_shuffle(shuffled_r, params_ptr-> resp_param2, M, params_ptr->resp_param1_int);
 
         BYTE local_buf_c2[SHA256_BLOCK_SIZE];
-        com_func_ints(local_buf_c2, shuffled_r, M);
+        com_func(local_buf_c2, shuffled_r);
 
         int com2_result = coms_equal(coms_ptr->com_c2.buf_c2, local_buf_c2);
 

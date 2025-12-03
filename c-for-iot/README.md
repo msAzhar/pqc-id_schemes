@@ -36,3 +36,10 @@ qemu-system-arm -machine mps2-an386 -cpu cortex-m4 -kernel c-for-iot/build/arm/k
 ```
 
 Pass any additional QEMU flags via `QEMU_EXTRA_ARGS="-d in_asm"` on the make command line if you need tracing. All schemes seed the portable RNG deterministically at startup; adjust the call to `rng_seed()` inside the individual `main` functions if a different seed is desired.
+Each built binary is a freestanding ELF that can be executed with semihosting. Example (for the Kawachi demo):
+
+```bash
+qemu-system-arm -machine mps2-an386 -kernel c-for-iot/build/arm/kawachi -semihosting
+```
+
+All schemes seed the portable RNG deterministically at startup; adjust the call to `rng_seed()` inside the individual `main` functions if a different seed is desired.

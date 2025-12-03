@@ -1,5 +1,4 @@
 #include <stdbool.h>
-#include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -71,15 +70,16 @@ int v_challenge(void);
 void p_params(Resp_params *params_ptr, int ch, int r1[N], int r2[N], int r3[N], int u[M], int us[M], int aus[N], int errors[N]);
 int v_check(Coms *coms_ptr, Resp_params *params_ptr, int ch, int matrix_A[][M], int pk_b[N]);
 
-void com_func(BYTE buf[SHA256_BLOCK_SIZE], const void *data, size_t len_bytes);
+void com_func(BYTE buf[SHA256_BLOCK_SIZE], BYTE data[]);
 int coms_equal(BYTE buf1[SHA256_BLOCK_SIZE], BYTE buf2[SHA256_BLOCK_SIZE]);
 
-void com_func(BYTE buf[SHA256_BLOCK_SIZE], const void *data, size_t len_bytes)
+void com_func(BYTE buf[SHA256_BLOCK_SIZE], BYTE data[])
 {
     SHA256_CTX ctx;
+    size_t len = NELEMS(data);
 
     sha256_init(&ctx);
-    sha256_update(&ctx, data, len_bytes);
+    sha256_update(&ctx, data, len);
     sha256_final(&ctx, buf);
 }
 
@@ -121,9 +121,9 @@ int keygen(int matrix_A[][M], int sk_s[M], int pk_b[N], int errors[N]){
     addVectors(pk_b, temp_y, errors, N); // As + e
 
 
-    com_func(coms_ptr->com_c1.buf_c1, sigma_r1_concat, sizeof(sigma_r1_concat));
-    com_func(coms_ptr->com_c2.buf_c2, aus_r2_concat, sizeof(aus_r2_concat));
-    com_func(coms_ptr->com_c3.buf_c3, aub_r3_concat, sizeof(aub_r3_concat));
+    com_func(coms_ptr->com_c1.buf_c1, sigma_r1_concat);
+    com_func(coms_ptr->com_c2.buf_c2, aus_r2_concat);
+    com_func(coms_ptr->com_c3.buf_c3, aub_r3_concat);
 
      */
 	return 0;
@@ -170,7 +170,7 @@ int p_coms(Coms *coms_ptr, int r1[N], int r2[N], int r3[N], int u[M], int us[M],
     concat_value_and_array(sigma_r1_concat, rand_sigma, N, r1);
 
     BYTE local_buf_c1[SHA256_BLOCK_SIZE];
-        com_func(coms_ptr->com_c1.buf_c1, sigma_r1_concat, sizeof(sigma_r1_concat));
+    com_func(coms_ptr->com_c1.buf_c1, sigma_r1_concat);
 
     
     assignVectorValues(coms_ptr->com_c2.Aus, shuffled_aus, N);
@@ -180,7 +180,7 @@ int p_coms(Coms *coms_ptr, int r1[N], int r2[N], int r3[N], int u[M], int us[M],
     concat_two_arrays(aus_r2_concat, N, shuffled_aus, N, r2);
 
     BYTE local_buf_c2[SHA256_BLOCK_SIZE];
-    com_func(coms_ptr->com_c2.buf_c2, aus_r2_concat, sizeof(aus_r2_concat));
+    com_func(coms_ptr->com_c2.buf_c2, aus_r2_concat);
 
 
     assignVectorValues(coms_ptr->com_c3.Aub, shuffled_aub, N);
@@ -191,7 +191,7 @@ int p_coms(Coms *coms_ptr, int r1[N], int r2[N], int r3[N], int u[M], int us[M],
     concat_two_arrays(aub_r3_concat, N, shuffled_aub, N, r3);
 
     BYTE local_buf_c3[SHA256_BLOCK_SIZE];
-    com_func(coms_ptr->com_c3.buf_c3, aub_r3_concat, sizeof(aub_r3_concat));
+    com_func(coms_ptr->com_c3.buf_c3, aub_r3_concat);
 
 
 
@@ -242,7 +242,7 @@ int v_check(Coms *coms_ptr, Resp_params *params_ptr, int ch, int matrix_A[][M], 
         concat_two_arrays(aus_r2_concat, N, shuffled_aus, N, params_ptr->resp_param2);
 
         BYTE local_buf_c2[SHA256_BLOCK_SIZE];
-        com_func(local_buf_c2, aus_r2_concat, sizeof(aus_r2_concat));
+        com_func(local_buf_c2, aus_r2_concat);
 
         int com2_result = coms_equal(coms_ptr->com_c2.buf_c2, local_buf_c2);
 
@@ -250,7 +250,7 @@ int v_check(Coms *coms_ptr, Resp_params *params_ptr, int ch, int matrix_A[][M], 
         concat_value_and_array(sigma_r1_concat, coms_ptr->com_c1.sigma, N, params_ptr->resp_param1);
 
         BYTE local_buf_c1[SHA256_BLOCK_SIZE];
-        com_func(local_buf_c1, sigma_r1_concat, sizeof(sigma_r1_concat));
+        com_func(local_buf_c1, sigma_r1_concat);
 
         int com1_result = coms_equal(coms_ptr->com_c1.buf_c1, local_buf_c1);
 
@@ -271,7 +271,7 @@ int v_check(Coms *coms_ptr, Resp_params *params_ptr, int ch, int matrix_A[][M], 
         concat_two_arrays(aus_r2_concat, N, shuffled_aus, N, params_ptr->resp_param2);
 
         BYTE local_buf_c2[SHA256_BLOCK_SIZE];
-        com_func(local_buf_c2, aus_r2_concat, sizeof(aus_r2_concat));
+        com_func(local_buf_c2, aus_r2_concat);
 
         int com2_result = coms_equal(coms_ptr->com_c2.buf_c2, local_buf_c2);
 
@@ -279,7 +279,7 @@ int v_check(Coms *coms_ptr, Resp_params *params_ptr, int ch, int matrix_A[][M], 
         concat_two_arrays(aub_r3_concat, N, shuffled_aub, N, params_ptr->resp_param2);
 
         BYTE local_buf_c3[SHA256_BLOCK_SIZE];
-        com_func(local_buf_c3, aub_r3_concat, sizeof(aub_r3_concat));
+        com_func(local_buf_c3, aub_r3_concat);
 
         int com3_result = coms_equal(coms_ptr->com_c3.buf_c3, local_buf_c3);
 
@@ -299,7 +299,7 @@ int v_check(Coms *coms_ptr, Resp_params *params_ptr, int ch, int matrix_A[][M], 
         concat_value_and_array(sigma_r1_concat, coms_ptr->com_c1.sigma, N, params_ptr->resp_param1);
 
         BYTE local_buf_c1[SHA256_BLOCK_SIZE];
-        com_func(local_buf_c1, sigma_r1_concat, sizeof(sigma_r1_concat));
+        com_func(local_buf_c1, sigma_r1_concat);
 
         int com1_result = coms_equal(coms_ptr->com_c1.buf_c1, local_buf_c1);
 
@@ -307,7 +307,7 @@ int v_check(Coms *coms_ptr, Resp_params *params_ptr, int ch, int matrix_A[][M], 
         concat_two_arrays(aub_r3_concat, N, shuffled_aub, N, params_ptr->resp_param2);
 
         BYTE local_buf_c3[SHA256_BLOCK_SIZE];
-        com_func(local_buf_c3, aub_r3_concat, sizeof(aub_r3_concat));
+        com_func(local_buf_c3, aub_r3_concat);
 
         int com3_result = coms_equal(coms_ptr->com_c3.buf_c3, local_buf_c3);
 
